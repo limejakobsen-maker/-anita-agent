@@ -1,0 +1,35 @@
+# ════════════════════════════════════════════════════════════════════════
+# Anita Agent - Production Overlay
+# ════════════════════════════════════════════════════════════════════════
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: anita-agent
+
+resources:
+- ../../base
+
+namePrefix: prod-
+
+commonLabels:
+  environment: production
+  tier: backend
+
+images:
+- name: ghcr.io/emil/anita-agent
+  newTag: v1.0.0  # Oppdateres av CI/CD
+
+replicas:
+- name: anita-agent
+  count: 3
+
+patchesStrategicMerge:
+- deployment-patch.yaml
+
+configMapGenerator:
+- name: anita-agent-config
+  behavior: merge
+  literals:
+  - ENVIRONMENT=production
+  - LOG_LEVEL=info

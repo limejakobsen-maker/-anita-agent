@@ -1,0 +1,27 @@
+# Base ConfigMap for Anita Agent
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: anita-agent-config
+data:
+  config.yaml: |
+    environment: production
+    log_level: info
+    
+    features:
+      self_healing: true
+      ai_integration: true
+      gitops: true
+      
+    ai:
+      default_model: "deepseek-coder-v2:16b"
+      fallback_model: "qwen2.5:7b"
+      
+    monitoring:
+      enabled: true
+      metrics_port: 8080
+      health_check_interval: 30
+      
+    security:
+      require_auth: true
+      max_request_size: 10485760  # 10MB

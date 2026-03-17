@@ -1,0 +1,62 @@
+# Testing Namespace for Anita Agent CI/CD
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: testing-anita-agent
+  labels:
+    environment: testing
+    app: anita-agent
+    ci-cd: "true"
+  annotations:
+    description: "Testing environment for Anita Agent CI/CD pipeline"
+    
+---
+# Resource Quota for testing namespace
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: testing-quota
+  namespace: testing-anita-agent
+spec:
+  hard:
+    requests.cpu: "4"
+    requests.memory: 8Gi
+    limits.cpu: "8"
+    limits.memory: 16Gi
+    pods: "10"
+    services: "5"
+    
+---
+# Network Policy for testing namespace
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: testing-network-policy
+  namespace: testing-anita-agent
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: default
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+    ports:
+    - protocol: TCP
+      port: 8080
+    - protocol: TCP
+      port: 8765
+  egress:
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 53
+    - protocol: UDP
+      port: 53
+  - to:
+    - namespaceSelector: {}

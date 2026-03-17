@@ -1,0 +1,109 @@
+╔══════════════════════════════════════════════════════════════════╗
+  KOPIERING AKTIVERt - HTTP-SERVER KJØRER!                          
+╚══════════════════════════════════════════════════════════════════╝
+
+🌐 ACER HTTP-SERVER: http://100.114.112.61:8000/
+
+STEG 1 - PÅ LENOVO (Kjør disse kommandoene):
+──────────────────────────────────────────────
+
+1. Åpne terminal på Lenovo
+
+2. Opprett mappe:
+   mkdir -p ~/self_healing_system
+   cd ~/self_healing_system
+
+3. Last ned alle filer (kopier og lim inn):
+
+   curl -O http://100.114.112.61:8000/sandkasse_protokoll.py
+   curl -O http://100.114.112.61:8000/sandkasse_protokoll_part2.py
+   curl -O http://100.114.112.61:8000/protokoll_server.py
+   curl -O http://100.114.112.61:8000/self_healing_wrapper.py
+   curl -O http://100.114.112.61:8000/error_handler.py
+   curl -O http://100.114.112.61:8000/ai_fixer.py
+   curl -O http://100.114.112.61:8000/install.sh
+
+4. Verifiser at filene kom:
+   ls -la
+
+   Du skal se 7 filer (ca. 80KB totalt)
+
+5. Installer systemet:
+   chmod +x install.sh
+   ./install.sh
+
+
+STEG 2 - START SERVER PÅ LENOVO:
+─────────────────────────────────
+1. Etter installasjon, kjør:
+   cd ~/self_healing_system
+   python3 protokoll_server.py
+
+   💡 La vinduet stå ÅPENT!
+
+   Du skal se:
+   ╔═══════════════════════════════════════════════════════════╗
+   ║  [LENOVO] Sandkasse-Protokoll Server v3.0                  ║
+   ║  Lytter på: 0.0.0.0:8765                                  ║
+   ╚═══════════════════════════════════════════════════════════╝
+
+
+STEG 3 - START MONITOR PÅ ACER:
+────────────────────────────────
+1. På Acer, dobbeltklikk på:
+   "Sandkasse Monitor.lnk" på skrivebordet
+   (ELLER kjør: python protokoll_monitor.py)
+
+2. Vent på "Tilkoblet Lenovo"
+
+3. Test med et enkelt prosjekt:
+   - Prosjektnavn: "TestHeiVerden"
+   - Krav: "Et Python-program som skriver 'Hei Verden'"
+   - Klikk START
+
+
+╔══════════════════════════════════════════════════════════════════╗
+  ALTERNATIV: HELAUTOMATISK SKRIPT                                  
+╚══════════════════════════════════════════════════════════════════╝
+
+På Lenovo, kjør ALT i ett:
+
+bash -c "
+mkdir -p ~/self_healing_system && cd ~/self_healing_system && \
+curl -O http://100.114.112.61:8000/sandkasse_protokoll.py && \
+curl -O http://100.114.112.61:8000/sandkasse_protokoll_part2.py && \
+curl -O http://100.114.112.61:8000/protokoll_server.py && \
+curl -O http://100.114.112.61:8000/self_healing_wrapper.py && \
+curl -O http://100.114.112.61:8000/error_handler.py && \
+curl -O http://100.114.112.61:8000/ai_fixer.py && \
+curl -O http://100.114.112.61:8000/install.sh && \
+echo '✅ FILER LASTET NED' && ls -la
+"
+
+
+╔══════════════════════════════════════════════════════════════════╗
+  FEILSØKING                                                       
+╚══════════════════════════════════════════════════════════════════╝
+
+Problem: "curl: (7) Failed to connect"
+→ Sjekk at Acer er på: ping 100.114.112.61
+
+Problem: "Permission denied"
+→ Kjør: chmod +x install.sh
+
+Problem: "python3: command not found"
+→ Kjør: sudo apt install python3
+
+Problem: "pip3: command not found"
+→ Kjør: sudo apt install python3-pip
+
+
+╔══════════════════════════════════════════════════════════════════╗
+  STATUS: HTTP-SERVER KJØRER PÅ ACER!                              
+╚══════════════════════════════════════════════════════════════════╝
+
+Filene er klare til nedlasting på:
+http://100.114.112.61:8000/
+
+Dato: 2026-03-02
+Versjon: 3.0 (Optimal Sandkasse)

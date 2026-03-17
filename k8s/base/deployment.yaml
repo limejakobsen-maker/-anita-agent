@@ -1,0 +1,50 @@
+# ════════════════════════════════════════════════════════════════════════
+# Anita Agent - Deployment
+# ════════════════════════════════════════════════════════════════════════
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anita-agent
+  labels:
+    app: anita-agent
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: anita-agent
+  template:
+    metadata:
+      labels:
+        app: anita-agent
+    spec:
+      containers:
+      - name: anita-agent
+        image: ghcr.io/emil/anita-agent:latest
+        ports:
+        - containerPort: 8080
+          name: http
+        - containerPort: 8765
+          name: websocket
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5

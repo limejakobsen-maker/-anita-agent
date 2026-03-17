@@ -1,0 +1,8 @@
+# Base namespace configuration
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: anita-agent
+  labels:
+    app: anita-agent
+    environment: base

@@ -1,0 +1,54 @@
+ANITA - SYSTEMANALYSE OG FORBEDRINGSOPPDRAG
+===========================================
+
+Hei Anita! Jeg trenger din hjelp til å analysere "Den Digitale Riggen" mitt system og finne GRATIS forbedringer fra GitHub.
+
+SYSTEMET MITT:
+--------------
+1. Selvhelbredende AI-system (@heal dekorator, error handling, AI-fikser)
+2. 6-fase utviklingsprotokoll (INIT→DISCUSS→PLAN→EXECUTE→VALIDATE→DEPLOY)
+3. Kubernetes cluster (K3d) med: anita-agent, ollama, comfyui, telegram-webhook, anythingllm (deg!)
+4. Nylig implementert: ComfyUI integrasjon, Auto-dokumentasjon, Smart Git
+5. Web-grensesnitt med toggle-logg og 4 paneler
+
+DIN OPPGAVE:
+------------
+1. Les filene jeg deler (anita_agent.py, self_healing_wrapper.py, etc.)
+2. Analyser hver komponent for svakheter/mangler
+3. Søk på GitHub etter GRATIS, åpen kildekode-verktøy som kan forbedre:
+   - SIKKERHET (secrets, policy, scanning)
+   - YTELSE (optimalisering, caching, HPA)
+   - MONITORERING (logging, metrics, alerts)
+   - CI/CD (GitOps, testing, pipelines)
+   - BACKUP (PVC snapshots, disaster recovery)
+4. Gi meg en prioriteringsliste (Kritisk/Høy/Medium/Lav)
+
+KRITERIER:
+----------
+- Må være GRATIS og åpen kildekode
+- Aktivt vedlikeholdt (siste commit < 6 mnd)
+- Produksjonsklart
+- Kompatibelt med Python, Kubernetes, Ollama
+
+LEVERANSEFORMAT:
+----------------
+For hver forbedring:
+1. NAVN: [verktøy]
+2. GITHUB: https://github.com/...
+3. BESKRIVELSE: Hva gjør det?
+4. STJERNER: [⭐ antall]
+5. IMPLEMENTASJON: Korte steg
+6. PRIORITET: Kritisk/Høy/Medium/Lav
+
+BONUS:
+------
+- Lag en GitHub Actions workflow for auto-deploy
+- Finn et verktøy for sanntidsovervåking med Telegram-varsling
+- Foreslå bedre secret-håndtering (Vault/Sealed Secrets)
+
+Filene jeg vil dele med deg ligger i:
+- C:\AI_System\anita-agent\
+- C:\Users\Emil\Desktop\PROSJEKTMAPPE AI\SANDKASSE\07_Sandkasse_SelfHealing\
+- C:\AI_System\ai-viz\
+
+Lykke til! 🚀

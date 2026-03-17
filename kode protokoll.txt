@@ -1,0 +1,571 @@
+Jeg forstår! Du vil ha hjelp til å lage en automatisk programmeringsassistent i din Lenovo Sandkasse som følger en bombesikker protokoll for å lage og teste programmer, inspirert av eksisterende programmer du har.
+La meg først sjekke hva som finnes om slike protokoller og beste praksis for AI-assistert koding.
+Search
+AI coding assistant protocol best practices automated testing LLM code generation safety protocol software development autonomous coding agent workflow validation testing
+21 results
+Basert på din rigg og beste praksis for AI-assistert koding , skal jeg designe en bombesikker protokoll for din Lenovo Sandkasse. Dette blir et Python-basert "Programmeringsverktøy" som kjører autonome utviklingssykluser med TDD (Test-Driven Development).
+🏗️ Arkitektur: "Sandkasse-Protokollen"
+Python
+Copy
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+SANDKASSE-PROTOKOLLEN v1.0
+Autonom programmeringsassistent for Lenovo Sandkasse
+Følger streng TDD + iterativ validering
+"""
+
+import os
+import sys
+import json
+import subprocess
+import shutil
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
+from dataclasses import dataclass, asdict
+import logging
+
+# Konfigurasjon
+CONFIG = {
+    "base_path": Path("C:/Sandkasse_Produksjon"),
+    "archive_path": Path("Z:/04_Kode_Arkv"),  # Ditt Bygg_Arkiv
+    "log_path": Path("C:/Sandkasse_Produksjon/logs"),
+    "max_iterations": 10,
+    "safety_checks": True,
+    "required_tests_pass": 100,  # Prosent
+}
+
+@dataclass
+class Prosjekt:
+    """Struktur for hvert kodeprosjekt"""
+    navn: str
+    beskrivelse: str
+    sprak: str  # python, javascript, etc.
+    mappe: Path
+    status: str = "initiert"
+    iterasjon: int = 0
+    test_dekning: float = 0.0
+    sist_sjekket: Optional[datetime] = None
+
+class SandkasseProtokoll:
+    """
+    Hovedklasse som orkestrerer den bombesikre utviklingsprosessen.
+    Følger 5-fase protokoll:
+    1. SPECS - Definer krav og tester
+    2. SKELETT - Generer prosjektstruktur
+    3. KODE - Implementer funksjonalitet
+    4. VALIDER - Kjør tester og statisk analyse
+    5. DEPLOY - Pakk og arkiver
+    """
+    
+    def __init__(self):
+        self.config = CONFIG
+        self._setup_logging()
+        self.aktive_prosjekter: Dict[str, Prosjekt] = {}
+        self.sikkerhets_regler = self._last_sikkerhets_regler()
+        
+    def _setup_logging(self):
+        """Sett opp detaljert logging for audit trail"""
+        self.config["log_path"].mkdir(parents=True, exist_ok=True)
+        log_fil = self.config["log_path"] / f"protokoll_{datetime.now():%Y%m%d_%H%M%S}.log"
+        
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s [%(levelname)s] %(message)s',
+            handlers=[
+                logging.FileHandler(log_fil, encoding='utf-8'),
+                logging.StreamHandler(sys.stdout)
+            ]
+        )
+        self.logger = logging.getLogger("SandkasseProtokoll")
+        self.logger.info("🚀 Sandkasse-Protokollen initialisert")
+        
+    def _last_sikkerhets_regler(self) -> Dict:
+        """Last inn sikkerhetsregler fra konfigurasjon"""
+        regler = {
+            "forbudte_imports": ["os.system", "subprocess.call", "eval", "exec"],
+            "pakke_sperre": ["requests", "urllib"],  # Tillat kun etter review
+            "max_filsstorrelse_mb": 50,
+            "krev_signering": True,
+        }
+        return regler
+    
+    def fase_1_spesifikasjon(self, prosjektnavn: str, krav: str) -> Prosjekt:
+        """
+        FASE 1: SPECS
+        - Analyser krav
+        - Generer test-spesifikasjoner FØRST (TDD)
+        - Valider at krav er målbare
+        """
+        self.logger.info(f"📋 FASE 1: Spesifikasjon for '{prosjektnavn}'")
+        
+        prosjekt_mappe = self.config["base_path"] / prosjektnavn
+        prosjekt_mappe.mkdir(parents=True, exist_ok=True)
+        
+        # Opprett standard mappestruktur
+        struktur = {
+            "src": prosjekt_mappe / "src",
+            "tests": prosjekt_mappe / "tests", 
+            "docs": prosjekt_mappe / "docs",
+            "config": prosjekt_mappe / "config",
+            "dist": prosjekt_mappe / "dist",
+        }
+        for mappe in struktur.values():
+            mappe.mkdir(exist_ok=True)
+        
+        # Generer spesifikasjonsdokument
+        specs = {
+            "prosjektnavn": prosjektnavn,
+            "krav": krav,
+            "dato": datetime.now().isoformat(),
+            "test_strategi": "TDD - Tester skrives først",
+            "akseptansekriterier": self._generer_akseptansekriterier(krav),
+            "sikkerhets_niva": "hoy",  # Standard for all kode
+        }
+        
+        specs_fil = prosjekt_mappe / "docs" / "spesifikasjon.json"
+        with open(specs_fil, 'w', encoding='utf-8') as f:
+            json.dump(specs, f, indent=2, ensure_ascii=False)
+        
+        prosjekt = Prosjekt(
+            navn=prosjektnavn,
+            beskrivelse=krav,
+            sprak="python",  # Standard, kan endres
+            mappe=prosjekt_mappe,
+            status="specs_ferdig"
+        )
+        
+        self.aktive_prosjekter[prosjektnavn] = prosjekt
+        self.logger.info(f"✅ Fase 1 fullført: {specs_fil}")
+        return prosjekt
+    
+    def _generer_akseptansekriterier(self, krav: str) -> List[str]:
+        """Generer målbare akseptansekriterier fra krav"""
+        # Dette ville normalt brukt AI for å parse krav
+        return [
+            "Alle enhetstester må passere (>90% dekning)",
+            "Ingen sikkerhetsvarsler fra statisk analyse",
+            "Koden følger PEP8 standard",
+            "Dokumentasjon er komplett",
+        ]
+    
+    def fase_2_skelett(self, prosjektnavn: str) -> bool:
+        """
+        FASE 2: SKELETT
+        - Generer prosjektstruktur
+        - Sett opp test-rammeverk
+        - Lag CI/CD konfigurasjon
+        """
+        self.logger.info(f"🏗️ FASE 2: Skelett for '{prosjektnavn}'")
+        
+        prosjekt = self.aktive_prosjekter.get(prosjektnavn)
+        if not prosjekt:
+            raise ValueError(f"Prosjekt {prosjektnavn} ikke funnet. Kjør Fase 1 først.")
+        
+        mappe = prosjekt.mappe
+        
+        # Generer test-mal først (TDD!)
+        test_mal = mappe / "tests" / "test_main.py"
+        test_kode = '''"""
+Tester for {prosjektnavn}
+GENERERT AV SANDKASSE-PROTOKOLLEN - Endres IKKE manuelt
+"""
+import pytest
+from src.main import *
+
+class TestKjerneFunksjonalitet:
+    def test_initialisering(self):
+        """Test at systemet initialiseres korrekt"""
+        assert True  # TODO: Implementer faktisk test
+        
+    def test_input_validering(self):
+        """Test at ugyldig input avvises"""
+        with pytest.raises(ValueError):
+            # TODO: Implementer negativ test
+            pass
+    
+    def test_grenseverdier(self):
+        """Test oppførsel ved grenseverdier"""
+        pass
+'''.format(prosjektnavn=prosjektnavn)
+        
+        with open(test_mal, 'w', encoding='utf-8') as f:
+            f.write(test_kode)
+        
+        # Generer main.py skelett
+        main_fil = mappe / "src" / "main.py"
+        main_kode = f'''"""
+{prosjektnavn}
+GENERERT AV SANDKASSE-PROTOKOLLEN
+Dato: {datetime.now():%Y-%m-%d}
+"""
+
+def main():
+    """Hovedinngang for applikasjonen"""
+    pass
+
+if __name__ == "__main__":
+    main()
+'''
+        with open(main_fil, 'w', encoding='utf-8') as f:
+            f.write(main_kode)
+        
+        # Konfigurasjonsfiler
+        req_fil = mappe / "requirements.txt"
+        with open(req_fil, 'w') as f:
+            f.write("pytest>=7.0.0\npytest-cov\nblack\nflake8\nbandit\n")
+        
+        # Makefile for automatisering
+        makefile = mappe / "Makefile"
+        make_innhold = '''.PHONY: test lint security clean build
+
+test:
+\tpytest tests/ -v --cov=src --cov-report=term-missing
+
+lint:
+\tflake8 src/ tests/ --max-line-length=88
+\tblack --check src/ tests/
+
+security:
+\tbandit -r src/ -f json -o security_report.json
+
+clean:
+\trm -rf dist/ build/ *.egg-info
+
+build: test lint security
+\tpython setup.py sdist bdist_wheel
+
+all: clean build
+'''
+        with open(makefile, 'w') as f:
+            f.write(make_innhold)
+        
+        prosjekt.status = "skelett_ferdig"
+        self.logger.info("✅ Fase 2 fullført: Prosjektskelett opprettet")
+        return True
+    
+    def fase_3_generer_kode(self, prosjektnavn: str, iterasjon: int = 0) -> Tuple[bool, str]:
+        """
+        FASE 3: KODE (Iterativ)
+        - Generer kode basert på spesifikasjon
+        - Kjør tester
+        - Hvis feil -> analyser -> rett -> gjenta (maks 10 iterasjoner)
+        """
+        self.logger.info(f"💻 FASE 3: Kodegenerering (Iterasjon {iterasjon}) for '{prosjektnavn}'")
+        
+        prosjekt = self.aktive_prosjekter[prosjektnavn]
+        
+        if iterasjon >= self.config["max_iterations"]:
+            self.logger.error("❌ Maks iterasjoner nådd. Avbryter.")
+            return False, "Maks iterasjoner nådd"
+        
+        # HER ville du koblet til din AI (Anita/LLM) for å generere kode
+        # Basert på spesifikasjon og tidligere testresultater
+        
+        # Simuler kodegenerering (erstatt med faktisk AI-kall)
+        self._simuler_ai_kodegenerering(prosjekt)
+        
+        prosjekt.iterasjon = iterasjon
+        prosjekt.status = f"kode_iterasjon_{iterasjon}"
+        
+        # Gå til validering
+        suksess, melding = self.fase_4_valider(prosjektnavn)
+        
+        if not suksess:
+            self.logger.warning(f"⚠️ Validering feilet: {melding}")
+            if iterasjon < self.config["max_iterations"]:
+                self.logger.info("🔄 Starter ny iterasjon...")
+                return self.fase_3_generer_kode(prosjektnavn, iterasjon + 1)
+            else:
+                return False, f"Feilet etter {iterasjon} forsøk: {melding}"
+        
+        return True, "Kode generert og validert"
+    
+    def _simuler_ai_kodegenerering(self, prosjekt: Prosjekt):
+        """Placeholder for AI-integrasjon. Erstatt med faktisk LLM-kall."""
+        # TODO: Integrer med din lokale LLM (Anita på Threadripper)
+        # Eksempel: requests.post("http://192.168.1.200:3001/api/generate", ...)
+        pass
+    
+    def fase_4_valider(self, prosjektnavn: str) -> Tuple[bool, str]:
+        """
+        FASE 4: VALIDER
+        - Kjør alle tester
+        - Statisk kodeanalyse (flake8, black)
+        - Sikkerhetsskanning (bandit)
+        - Sjekk testdekning
+        """
+        self.logger.info(f"🔍 FASE 4: Validering av '{prosjektnavn}'")
+        
+        prosjekt = self.aktive_prosjekter[prosjektnavn]
+        mappe = prosjekt.mappe
+        
+        # 1. Kjør tester
+        test_resultat = self._kjør_tester(mappe)
+        if not test_resultat["success"]:
+            return False, f"Tester feilet: {test_resultat['output']}"
+        
+        dekning = test_resultat.get("coverage", 0)
+        prosjekt.test_dekning = dekning
+        
+        if dekning < self.config["required_tests_pass"]:
+            return False, f"Testdekning for lav: {dekning}% (krever {self.config['required_tests_pass']}%)"
+        
+        # 2. Linting
+        lint_resultat = self._kjør_linting(mappe)
+        if not lint_resultat["success"]:
+            return False, f"Linting feilet: {lint_resultat['output']}"
+        
+        # 3. Sikkerhetsskanning
+        security_resultat = self._kjør_sikkerhetsskanning(mappe)
+        if security_resultat["high_severity"] > 0:
+            return False, f"Kritiske sikkerhetsfunnet: {security_resultat['issues']}"
+        
+        prosjekt.sist_sjekket = datetime.now()
+        self.logger.info(f"✅ Fase 4 fullført: Dekning {dekning}%, Ingen kritiske sikkerhetsissues")
+        return True, "All validering bestått"
+    
+    def _kjør_tester(self, mappe: Path) -> Dict:
+        """Kjør pytest med dekning"""
+        try:
+            resultat = subprocess.run(
+                ["pytest", "tests/", "-v", "--cov=src", "--cov-report=json"],
+                cwd=mappe,
+                capture_output=True,
+                text=True,
+                timeout=60
+            )
+            
+            # Parse dekning fra JSON
+            cov_json = mappe / "coverage.json"
+            dekning = 0
+            if cov_json.exists():
+                with open(cov_json) as f:
+                    cov_data = json.load(f)
+                    dekning = cov_data.get("totals", {}).get("percent_covered", 0)
+            
+            return {
+                "success": resultat.returncode == 0,
+                "output": resultat.stdout + resultat.stderr,
+                "coverage": dekning
+            }
+        except Exception as e:
+            return {"success": False, "output": str(e), "coverage": 0}
+    
+    def _kjør_linting(self, mappe: Path) -> Dict:
+        """Kjør flake8 og black"""
+        try:
+            # Sjekk formatering med black
+            black_res = subprocess.run(
+                ["black", "--check", "src/", "tests/"],
+                cwd=mappe,
+                capture_output=True,
+                text=True
+            )
+            
+            # Sjekk linting
+            flake_res = subprocess.run(
+                ["flake8", "src/", "tests/", "--max-line-length=88"],
+                cwd=mappe,
+                capture_output=True,
+                text=True
+            )
+            
+            return {
+                "success": black_res.returncode == 0 and flake_res.returncode == 0,
+                "output": black_res.stdout + flake_res.stdout
+            }
+        except Exception as e:
+            return {"success": False, "output": str(e)}
+    
+    def _kjør_sikkerhetsskanning(self, mappe: Path) -> Dict:
+        """Kjør bandit for sikkerhetsanalyse"""
+        try:
+            resultat = subprocess.run(
+                ["bandit", "-r", "src/", "-f", "json"],
+                cwd=mappe,
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+            
+            funn = json.loads(resultat.stdout) if resultat.stdout else {"results": []}
+            high_sev = sum(1 for issue in funn["results"] if issue["issue_severity"] == "HIGH")
+            
+            return {
+                "success": high_sev == 0,
+                "high_severity": high_sev,
+                "issues": funn["results"]
+            }
+        except Exception as e:
+            return {"success": False, "high_severity": 1, "issues": [str(e)]}
+    
+    def fase_5_deploy(self, prosjektnavn: str) -> bool:
+        """
+        FASE 5: DEPLOY
+        - Pakk koden
+        - Kopier til arkiv (Z:)
+        - Generer dokumentasjon
+        - Opprett manifest
+        """
+        self.logger.info(f"📦 FASE 5: Deploy av '{prosjektnavn}'")
+        
+        prosjekt = self.aktive_prosjekter[prosjektnavn]
+        mappe = prosjekt.mappe
+        
+        # 1. Bygg distribusjon
+        dist_mappe = mappe / "dist"
+        dist_mappe.mkdir(exist_ok=True)
+        
+        # 2. Kopier til arkiv
+        arkiv_dest = self.config["archive_path"] / prosjektnavn
+        arkiv_dest.mkdir(parents=True, exist_ok=True)
+        
+        # Kopier med versjonering
+        versjon = datetime.now().strftime("%Y%m%d_%H%M%S")
+        versjon_mappe = arkiv_dest / f"v_{versjon}"
+        
+        shutil.copytree(mappe, versjon_mappe, ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '.pytest_cache'))
+        
+        # 3. Generer manifest
+        manifest = {
+            "prosjekt": asdict(prosjekt),
+            "versjon": versjon,
+            "sjekksum": self._generer_sjekksum(versjon_mappe),
+            "godkjent_av": "Sandkasse-Protokollen",
+            "deploy_dato": datetime.now().isoformat(),
+        }
+        
+        with open(versjon_mappe / "manifest.json", 'w', encoding='utf-8') as f:
+            json.dump(manifest, f, indent=2, ensure_ascii=False)
+        
+        prosjekt.status = "deployet"
+        self.logger.info(f"✅ Fase 5 fullført: Arkivert til {versjon_mappe}")
+        return True
+    
+    def _generer_sjekksum(self, mappe: Path) -> str:
+        """Generer hash av alle filer for integritetssjekk"""
+        import hashlib
+        sha256 = hashlib.sha256()
+        
+        for fil in sorted(mappe.rglob("*")):
+            if fil.is_file():
+                sha256.update(fil.read_bytes())
+        
+        return sha256.hexdigest()[:16]
+    
+    def kjør_full_protokoll(self, prosjektnavn: str, krav: str) -> bool:
+        """Kjør alle 5 faser i sekvens"""
+        self.logger.info(f"🎯 Starter full protokoll for '{prosjektnavn}'")
+        
+        try:
+            # Fase 1-2: Setup
+            prosjekt = self.fase_1_spesifikasjon(prosjektnavn, krav)
+            self.fase_2_skelett(prosjektnavn)
+            
+            # Fase 3-4: Iterativ utvikling
+            suksess, melding = self.fase_3_generer_kode(prosjektnavn)
+            if not suksess:
+                self.logger.error(f"❌ Protokoll feilet: {melding}")
+                return False
+            
+            # Fase 5: Deploy
+            self.fase_5_deploy(prosjektnavn)
+            
+            self.logger.info(f"🎉 PROTOKOLL FULLFØRT: '{prosjektnavn}' er klar!")
+            return True
+            
+        except Exception as e:
+            self.logger.exception(f"💥 Kritisk feil i protokoll: {e}")
+            return False
+
+
+# === BRUKER-GRENSESNITT ===
+
+def main():
+    """Hovedinngang for kommandolinje"""
+    print("""
+    ╔══════════════════════════════════════════╗
+    ║     SANDKASSE-PROTOKOLLEN v1.0           ║
+    ║     Din bombesikre kodegenerator         ║
+    ╚══════════════════════════════════════════╝
+    """)
+    
+    protokoll = SandkasseProtokoll()
+    
+    # Eksempel på bruk:
+    # prosjektnavn = "LokalRegnskap_Pro_v2"
+    # krav = "Et regnskapssystem for håndtering av byggprosjekter..."
+    # protokoll.kjør_full_protokoll(prosjektnavn, krav)
+    
+    print("Protokoll klar. Bruk:")
+    print("  protokoll.kjør_full_protokoll('MittProsjekt', 'Beskrivelse...')")
+    print("  protokoll.fase_1_spesifikasjon(...) for manuell kontroll")
+
+if __name__ == "__main__":
+    main()
+🔧 Integrasjon med Din Rigg
+For å koble dette til din Anita AI på Threadripper, legg til denne klassen:
+Python
+Copy
+class AnitaIntegrasjon:
+    """Kobler Sandkasse-Protokollen til din lokale LLM"""
+    
+    def __init__(self, base_url="http://192.168.1.200:3001"):
+        self.url = base_url
+        
+    def generer_kode(self, spesifikasjon: str, tidligere_feil: List[str] = None) -> str:
+        """
+        Send forespørsel til AnythingLLM/Anita
+        med kontekst fra tidligere feil (iterativ forbedring)
+        """
+        prompt = self._bygg_prompt(spesifikasjon, tidligere_feil)
+        
+        # API-kall til din lokale LLM
+        response = requests.post(
+            f"{self.url}/api/v1/workspace/chat",
+            json={
+                "message": prompt,
+                "mode": "chat",
+                "sessionId": f"sandkasse_{datetime.now():%Y%m%d}"
+            }
+        )
+        return response.json()["textResponse"]
+    
+    def _bygg_prompt(self, specs: str, feil: List[str]) -> str:
+        return f"""Du er en ekspertprogrammerer i Sandkassen.
+        Følg strengt TDD-prinsippet: skriv kun kode som passerer eksisterende tester.
+        
+        Spesifikasjon: {specs}
+        {'Tidligere feil å rette: ' + str(feil) if feil else ''}
+        
+        Regler:
+        1. Ingen hardkodede passord eller API-nøkler
+        2. Alle funksjoner må ha type hints
+        3. Maks 50 linjer per funksjon
+        4. Ingen imports fra sperret liste: os.system, eval, exec
+        
+        Returner KUN koden, ingen forklaring."""
+📋 Installasjon i Sandkassen
+Lag filen: C:\Sandkasse_Produksjon\protokoll.py
+Installer avhengigheter:
+bash
+Copy
+pip install pytest pytest-cov black flake8 bandit requests
+Test protokollen:
+Python
+Copy
+from protokoll import SandkasseProtokoll
+
+p = SandkasseProtokoll()
+p.kjør_full_protokoll(
+    "TestProsjekt", 
+    "Et enkelt program som beregner areal av rektangel"
+)
+Denne protokollen sikrer at hver kodebit som genereres:
+Følger TDD (tester først) 
+Går gjennom statisk analyse og sikkerhetsskanning 
+Har >90% testdekning
+Arkiveres versjonert på din Z:-disk
+Kan spores tilbake til spesifikasjon

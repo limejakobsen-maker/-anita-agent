@@ -1,0 +1,47 @@
+# Test Dependencies for Anita Agent
+# Install with: pip install -r requirements-test.txt
+
+# Core testing framework
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-xdist>=3.3.0
+pytest-timeout>=2.1.0
+pytest-mock>=3.11.0
+pytest-cov>=4.1.0
+pytest-html>=3.2.0
+pytest-metadata>=3.0.0
+
+# Code quality
+flake8>=6.0.0
+black>=23.0.0
+isort>=5.12.0
+bandit>=1.7.0
+pylint>=2.17.0
+mypy>=1.5.0
+
+# HTTP/WebSocket testing
+httpx>=0.24.0
+pytest-httpx>=0.22.0
+websockets>=11.0.0
+
+# Database testing
+pytest-postgresql>=5.0.0
+pytest-redis>=3.0.0
+
+# Kubernetes testing
+kubernetes>=28.0.0
+pytest-kind>=22.0.0
+
+# AI/ML testing (hvis relevant)
+# pytest-assume>=2.4.0
+
+# Snapshot testing
+pytest-snapshot>=0.9.0
+
+# Fixtures
+factory-boy>=3.3.0
+faker>=19.0.0
+freezegun>=1.2.0
+
+# Performance testing
+pytest-benchmark>=4.0.0

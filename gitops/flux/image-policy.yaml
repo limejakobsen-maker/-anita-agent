@@ -1,0 +1,71 @@
+# Flux Image Policy for automated deployments
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: anita-agent
+  namespace: flux-system
+spec:
+  image: ghcr.io/emil/anita-agent
+  interval: 1m
+  secretRef:
+    name: ghcr-auth
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: anita-agent-production
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: anita-agent
+  policy:
+    semver:
+      range: ">=1.0.0"
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: anita-agent-testing
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: anita-agent
+  policy:
+    semver:
+      range: ">=0.0.0-0"
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageUpdateAutomation
+metadata:
+  name: anita-agent
+  namespace: flux-system
+spec:
+  interval: 1m
+  sourceRef:
+    kind: GitRepository
+    name: anita-agent
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        name: Flux Bot
+        email: flux@example.com
+      messageTemplate: |
+        ci: Automated image update
+        
+        Images:
+        {{ range .Updated.Images -}}
+        - {{.}}
+        {{ end }}
+        
+        [ci skip]
+    push:
+      branch: main
+  policy:
+    semver:
+      range: ">=1.0.0"

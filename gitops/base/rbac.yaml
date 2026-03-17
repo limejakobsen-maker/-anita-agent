@@ -1,0 +1,25 @@
+# RBAC for Anita Agent
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: anita-agent-role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "configmaps", "secrets"]
+  verbs: ["get", "list", "watch", "create", "update", "patch"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets"]
+  verbs: ["get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: anita-agent-binding
+subjects:
+- kind: ServiceAccount
+  name: anita-agent
+roleRef:
+  kind: Role
+  name: anita-agent-role
+  apiGroup: rbac.authorization.k8s.io

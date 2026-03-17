@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <title>KODE AGENT + AnythingLLM Integrasjon</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #eee;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #0f0f23;
+            border-radius: 15px;
+            padding: 40px;
+            border: 2px solid #e94560;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #e94560;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #e94560;
+            font-size: 2.5em;
+            margin: 0;
+        }
+        .header h2 {
+            color: #533483;
+            font-weight: normal;
+        }
+        .alert-box {
+            background: #e94560;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 1.1em;
+        }
+        .code-block {
+            background: #1a1a2e;
+            border: 1px solid #533483;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            color: #00ff88;
+        }
+        .step {
+            background: #16213e;
+            border-left: 4px solid #e94560;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        .step h3 {
+            color: #e94560;
+            margin-top: 0;
+        }
+        .endpoint {
+            background: #1a1a2e;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #533483;
+        }
+        .method {
+            display: inline-block;
+            background: #00ff88;
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .url {
+            color: #00d9ff;
+            font-family: monospace;
+        }
+        .button {
+            display: inline-block;
+            background: #e94560;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin: 20px 10px;
+            transition: all 0.3s;
+        }
+        .button:hover {
+            background: #ff6b6b;
+            transform: scale(1.05);
+        }
+        .green { background: #00ff88; color: #000; }
+        .green:hover { background: #00cc6a; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>KODE AGENT</h1>
+            <h2>AnythingLLM Integrasjon</h2>
+        </div>
+        
+        <div class="alert-box">
+            <strong>FOR LOKAL AI BRUK!</strong><br>
+            Koble Kode Agent til din private AnythingLLM/Ollama installasjon.
+            Ingen data sendes til skyen!
+        </div>
+        
+        <h2 style="color: #e94560;">&#128640; HURTIGSTART (3 steg)</h2>
+        
+        <div class="step">
+            <h3>STEG 1: Start API Server</h3>
+            <p>Dobbeltklikk: <strong>START_KODE_AGENT_SERVER.bat</strong> p&#229; skrivebordet</p>
+            <p>Eller kj&#248;r i terminal:</p>
+            <div class="code-block">
+cd C:\Sandkasse_Produksjon
+python anythingllm_agent.py
+            </div>
+            <p>Server starter p&#229;: <span style="color: #00ff88;">http://127.0.0.1:8765</span></p>
+        </div>
+        
+        <div class="step">
+            <h3>STEG 2: Konfigurer AnythingLLM</h3>
+            <p>1. &#197;pne AnythingLLM (<a href="http://192.168.1.200:3001" style="color: #00d9ff;">192.168.1.200:3001</a>)</p>
+            <p>2. G&#229; til Settings &#8594; LLM Preference</p>
+            <p>3. Velg Ollama (din lokale modell)</p>
+            <p>4. Lim inn <strong>System Prompt</strong> (fra anythingllm_system_prompt.txt)</p>
+        </div>
+        
+        <div class="step">
+            <h3>STEG 3: Test!</h3>
+            <p>I AnythingLLM chatten, skriv:</p>
+            <div class="code-block">
+Opprett et Python-prosjekt kalt "MinTestApp"
+            </div>
+            <p>AI-en skal:</p>
+            <ul>
+                <li>Tolke kommandoen</li>
+                <li>Kalle API-et</li>
+                <li>Opprette prosjektet</li>
+                <li>Gi deg filstien</li>
+            </ul>
+        </div>
+        
+        <h2 style="color: #e94560;">&#128279; API ENDPOINTS</h2>
+        
+        <div class="endpoint">
+            <span class="method">POST</span>
+            <span class="url">http://127.0.0.1:8765/command</span>
+            <p style="margin-top: 10px;">Hovedkommando for alle handlinger</p>
+            <div class="code-block">
+{
+  "action": "create",
+  "project_name": "MinApp",
+  "description": "En test app",
+  "project_type": "python"
+}
+            </div>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method">GET</span>
+            <span class="url">http://127.0.0.1:8765/</span>
+            <p style="margin-top: 10px;">Health check - sjekk om server kj&#248;rer</p>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method">GET</span>
+            <span class="url">http://127.0.0.1:8765/projects</span>
+            <p style="margin-top: 10px;">Liste alle aktive prosjekter</p>
+        </div>
+        
+        <h2 style="color: #e94560;">&#9881; SYSTEM PROMPT (kopier til AnythingLLM)</h2>
+        <div class="code-block" style="font-size: 0.9em;">
+DU ER KODE AGENT - En autonom programmeringsassistent
+
+Du har tilgang til en lokal Kode Agent API.
+
+API ENDPOINT: http://127.0.0.1:8765
+
+KOMMANDOER:
+1. OPPRETT: POST /command {"action":"create",...}
+2. GENERER: POST /command {"action":"generate",...}
+3. BYGG: POST /command {"action":"build",...}
+4. ARKIVER: POST /command {"action":"archive",...}
+
+N&#229;r brukeren ber om &#229; lage kode:
+1. Sp&#248;r om prosjektnavn og type
+2. Bekreft handlingen
+3. Kall API-et
+4. Rapport&#233;r resultatet
+        </div>
+        
+        <h2 style="color: #e94560;">&#128161; EKSEMPEL P&#197; BRUK</h2>
+        
+        <div class="step">
+            <h3>Scenario: Lage regnskapssystem</h3>
+            <p><strong>Deg:</strong> "Jeg vil lage et regnskapssystem"</p>
+            <p><strong>AI:</strong> "Flott! Hva skal prosjektet hete?"</p>
+            <p><strong>Deg:</strong> "LimeRegnskap"</p>
+            <p><strong>AI:</strong> [Kaller API] "Opprettet! Prosjektet ligger i C:\Sandkasse_Produksjon\LimeRegnskap. Vil du at jeg skal generere kode?"</p>
+            <p><strong>Deg:</strong> "Ja, lag database-modeller og CRUD"</p>
+            <p><strong>AI:</strong> [Kaller API] "Generert! Kode i src/models.py og src/crud.py"</p>
+            <p><strong>Deg:</strong> "Bygg n&#229;"</p>
+            <p><strong>AI:</strong> [Kaller API] "Bygg fullf&#248;rt! Alle tester OK."</p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="file:///C:/Sandkasse_Produksjon" class="button">&#128193; &#197;pne Sandkasse</a>
+            <a href="http://192.168.1.200:3001" class="button green">&#128172; AnythingLLM</a>
+        </div>
+        
+        <div style="margin-top: 40px; padding: 20px; background: #1a1a2e; border-radius: 10px;">
+            <h3 style="color: #e94560;">&#128161; VIKTIG!</h3>
+            <ul>
+                <li>Alt kj&#248;rer LOKALT p&#229; din maskin</li>
+                <li>Ingen data sendes til skyen</li>
+                <li>API-server kun tilgjengelig fra localhost</li>
+                <li>Prosjekter lagres i C:\Sandkasse_Produksjon\</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
