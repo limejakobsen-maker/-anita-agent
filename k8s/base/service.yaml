@@ -1,0 +1,19 @@
+# ════════════════════════════════════════════════════════════════════════
+# Anita Agent - Service
+# ════════════════════════════════════════════════════════════════════════
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: anita-agent
+spec:
+  selector:
+    app: anita-agent
+  ports:
+  - port: 8080
+    targetPort: 8080
+    name: http
+  - port: 8765
+    targetPort: 8765
+    name: websocket
+  type: ClusterIP

@@ -1,0 +1,14 @@
+# ════════════════════════════════════════════════════════════════════════
+# Anita Agent - Namespace konfigurasjon
+# ════════════════════════════════════════════════════════════════════════
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: anita-agent
+  labels:
+    app: anita-agent
+    environment: production
+    version: v1
+  annotations:
+    description: "Anita Agent Self-Healing AI System"

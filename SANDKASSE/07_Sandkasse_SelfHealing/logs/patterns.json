@@ -1,0 +1,86 @@
+{
+  "88f70b2eff24": {
+    "timestamp": "2026-03-12T15:56:54.277868",
+    "function": "prosess_data",
+    "type": "IndexError",
+    "message": "list index out of range",
+    "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\Emil\\Desktop\\PROSJEKTMAPPE AI\\SANDKASSE\\07_Sandkasse_SelfHealing\\self_healing_wrapper.py\", line 45, in wrapper\n    result = func(*args, **kwargs)\n  File \"C:\\Users\\Emil\\Desktop\\PROSJEKTMAPPE AI\\SANDKASSE\\07_Sandkasse_SelfHealing\\main.py\", line 37, in prosess_data\n    first = data_list[0]  # Kan feile hvis tom\n            ~~~~~~~~~^^^\nIndexError: list index out of range\n",
+    "code_context": "@heal\ndef prosess_data(data_list):\n    \"\"\"\n    Prosesserer en dataliste\n    Kan feile med IndexError hvis listen er tom\n    \"\"\"\n    print(f\"[DATA] Prosesserer {len(data_list)} elementer...\")\n    \n    # Risikabel operasjon: henter f\u00f8rste og siste element\n    first = data_list[0]  # Kan feile hvis tom\n    last = data_list[-1]  # Kan feile hvis tom\n    \n    return {\"first\": first, \"last\": last, \"count\": len(data_list)}\n",
+    "error_hash": "88f70b2eff24",
+    "frequency": 2,
+    "status": "fixed",
+    "previously_seen": false,
+    "fixes": [
+      {
+        "description": "Auto-fiks for IndexError",
+        "success": true,
+        "timestamp": "2026-03-12T15:56:54.282951"
+      },
+      {
+        "description": "Auto-fiks for IndexError",
+        "success": true,
+        "timestamp": "2026-03-12T15:56:54.288565"
+      }
+    ]
+  },
+  "213463f74964": {
+    "timestamp": "2026-03-12T15:56:55.292219",
+    "function": "del_numbers",
+    "type": "ZeroDivisionError",
+    "message": "division by zero",
+    "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\Emil\\Desktop\\PROSJEKTMAPPE AI\\SANDKASSE\\07_Sandkasse_SelfHealing\\self_healing_wrapper.py\", line 45, in wrapper\n    result = func(*args, **kwargs)\n  File \"C:\\Users\\Emil\\Desktop\\PROSJEKTMAPPE AI\\SANDKASSE\\07_Sandkasse_SelfHealing\\main.py\", line 49, in del_numbers\n    return a / b\n           ~~^~~\nZeroDivisionError: division by zero\n",
+    "code_context": "@heal\ndef del_numbers(a, b):\n    \"\"\"\n    Deling av tall\n    Kan feile med ZeroDivisionError\n    \"\"\"\n    print(f\"[MATH] Beregner {a} / {b}...\")\n    return a / b\n",
+    "error_hash": "213463f74964",
+    "frequency": 2,
+    "status": "new",
+    "previously_seen": false
+  },
+  "7daf894831f5": {
+    "timestamp": "2026-03-12T15:56:56.301613",
+    "function": "hent_konfig",
+    "type": "KeyError",
+    "message": "'finnes_ikke'",
+    "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\Emil\\Desktop\\PROSJEKTMAPPE AI\\SANDKASSE\\07_Sandkasse_SelfHealing\\self_healing_wrapper.py\", line 45, in wrapper\n    result = func(*args, **kwargs)\n  File \"C:\\Users\\Emil\\Desktop\\PROSJEKTMAPPE AI\\SANDKASSE\\07_Sandkasse_SelfHealing\\main.py\", line 64, in hent_konfig\n    return config[n\u00f8kkel]  # Kan feile hvis n\u00f8kkel ikke finnes\n           ~~~~~~^^^^^^^^\nKeyError: 'finnes_ikke'\n",
+    "code_context": "@heal\ndef hent_konfig(n\u00f8kkel):\n    \"\"\"\n    Henter konfigurasjonsverdi\n    Kan feile med KeyError\n    \"\"\"\n    config = {\n        \"database_url\": \"postgresql://localhost/db\",\n        \"timeout\": 30,\n        \"retry_count\": 3\n    }\n    \n    print(f\"[CONF] Henter konfig for '{n\u00f8kkel}'...\")\n    return config[n\u00f8kkel]  # Kan feile hvis n\u00f8kkel ikke finnes\n",
+    "error_hash": "7daf894831f5",
+    "frequency": 2,
+    "status": "fixed",
+    "previously_seen": false,
+    "fixes": [
+      {
+        "description": "Auto-fiks for KeyError",
+        "success": true,
+        "timestamp": "2026-03-12T15:56:56.309067"
+      },
+      {
+        "description": "Auto-fiks for KeyError",
+        "success": true,
+        "timestamp": "2026-03-12T15:56:56.318154"
+      }
+    ]
+  },
+  "d6df629ee7d7": {
+    "timestamp": "2026-03-12T15:56:57.321742",
+    "function": "parse_json",
+    "type": "JSONDecodeError",
+    "message": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+    "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\Emil\\Desktop\\PROSJEKTMAPPE AI\\SANDKASSE\\07_Sandkasse_SelfHealing\\self_healing_wrapper.py\", line 45, in wrapper\n    result = func(*args, **kwargs)\n  File \"C:\\Users\\Emil\\Desktop\\PROSJEKTMAPPE AI\\SANDKASSE\\07_Sandkasse_SelfHealing\\main.py\", line 74, in parse_json\n    return json.loads(json_string)\n           ~~~~~~~~~~^^^^^^^^^^^^^\n  File \"C:\\Python314\\Lib\\json\\__init__.py\", line 352, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Python314\\Lib\\json\\decoder.py\", line 361, in raw_decode\n    obj, end = self.scan_once(s, idx)\n               ~~~~~~~~~~~~~~^^^^^^^^\njson.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n",
+    "code_context": "@heal\ndef parse_json(json_string):\n    \"\"\"\n    Parser JSON-data\n    Kan feile med ulike exceptions\n    \"\"\"\n    import json\n    print(\"[JSON] Parser JSON...\")\n    return json.loads(json_string)\n",
+    "error_hash": "d6df629ee7d7",
+    "frequency": 2,
+    "status": "fixed",
+    "previously_seen": false,
+    "fixes": [
+      {
+        "description": "Auto-fiks for JSONDecodeError",
+        "success": true,
+        "timestamp": "2026-03-12T15:56:57.359837"
+      },
+      {
+        "description": "Auto-fiks for JSONDecodeError",
+        "success": true,
+        "timestamp": "2026-03-12T15:56:57.365886"
+      }
+    ]
+  }
+}

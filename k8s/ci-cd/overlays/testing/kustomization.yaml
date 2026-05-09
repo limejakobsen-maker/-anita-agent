@@ -1,0 +1,37 @@
+# Kustomize overlay for testing environment
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: testing-anita-agent
+
+resources:
+- ../../testing-deployment.yaml
+
+namePrefix: test-
+
+images:
+- name: ghcr.io/emil/anita-agent
+  newTag: IMAGE_TAG  # Replaced by CI/CD pipeline
+
+replicas:
+- name: anita-agent
+  count: 1
+
+patches:
+- patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: anita-agent
+    spec:
+      template:
+        spec:
+          containers:
+          - name: anita-agent
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "100m"
+              limits:
+                memory: "1Gi"
+                cpu: "500m"

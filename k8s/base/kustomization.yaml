@@ -1,0 +1,25 @@
+# ════════════════════════════════════════════════════════════════════════
+# Anita Agent - Base Kustomization
+# ════════════════════════════════════════════════════════════════════════
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: anita-agent
+
+resources:
+- namespace.yaml
+- configmap.yaml
+- pvc.yaml
+- rbac.yaml
+- deployment.yaml
+- service.yaml
+
+commonLabels:
+  app.kubernetes.io/name: anita-agent
+  app.kubernetes.io/managed-by: kustomize
+
+images:
+- name: anita-agent
+  newName: ghcr.io/emil/anita-agent
+  newTag: latest
