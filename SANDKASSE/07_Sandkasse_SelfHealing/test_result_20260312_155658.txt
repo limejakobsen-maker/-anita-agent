@@ -1,0 +1,30 @@
+Selvhelbredende System - Test Resultater
+============================================================
+
+Tom liste (IndexError): FEIL
+  Resultat: list index out of range
+
+Gyldig liste: OK
+  Resultat: {'first': 1, 'last': 5, 'count': 5}
+
+Deling med null (ZeroDivisionError): FEIL
+  Resultat: division by zero
+
+Normal deling: OK
+  Resultat: 5.0
+
+Ugyldig config-nøkkel (KeyError): FEIL
+  Resultat: 'finnes_ikke'
+
+Gyldig config-nøkkel: OK
+  Resultat: 30
+
+Ugyldig JSON: FEIL
+  Resultat: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+
+Gyldig JSON: OK
+  Resultat: {'key': 'value'}
+
+Ekstern kommando (kan feile): OK
+  Resultat: Resultat av ls -la
+

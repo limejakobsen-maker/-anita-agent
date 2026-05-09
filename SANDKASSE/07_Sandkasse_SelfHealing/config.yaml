@@ -1,0 +1,34 @@
+﻿# Konfigurasjon for Selvhelbredende System
+
+system:
+  name: "Self-Healing AI"
+  version: "1.0.0"
+  environment: "development"  # development | production
+
+healing:
+  max_attempts: 3           # Hvor mange ganger prøve å fikse
+  enable_ai_fixes: true     # Bruk AI til å generere fikser
+  enable_local_fixes: true  # Bruk lokale standardfikser
+  validate_syntax: true     # Sjekk syntaks før fiks anvendes
+
+logging:
+  level: "INFO"            # DEBUG | INFO | WARNING | ERROR
+  log_dir: "logs"
+  max_log_files: 10
+  rotation_size_mb: 10
+
+backup:
+  enabled: true
+  backup_dir: "backups"
+  max_backups: 20          # Hvor mange backups å beholde
+  backup_on_fix: true      # Lag backup før hver fiks
+
+ai:
+  prefer_kimi: true        # Prioriter Kimi over Gemini
+  timeout_seconds: 30      # Timeout for AI-kall
+  max_code_length: 5000    # Maks kode-lengde sendt til AI
+
+safety:
+  allow_auto_apply: false  # I produksjon: false (manuel godkjenning)
+  require_validation: true # Krever at fiks valideres
+  dry_run_mode: false      # Test-modus uten å endre filer

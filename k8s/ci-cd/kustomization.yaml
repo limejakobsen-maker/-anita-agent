@@ -1,0 +1,27 @@
+# Kustomize base for CI/CD testing
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: testing-anita-agent
+
+resources:
+- testing-deployment.yaml
+
+images:
+- name: ghcr.io/emil/anita-agent
+  newTag: latest
+
+configMapGenerator:
+- name: anita-agent-testing-config
+  behavior: merge
+  literals:
+  - CI=true
+  - BUILD_ID=${BUILD_ID}
+
+commonLabels:
+  environment: testing
+  managed-by: github-actions
+
+patchesStrategicMerge:
+# Optional: Add patches for specific test scenarios
+# - replicas-patch.yaml

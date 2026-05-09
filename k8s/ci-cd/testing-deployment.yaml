@@ -1,0 +1,165 @@
+# Testing Deployment for Anita Agent
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anita-agent
+  namespace: testing-anita-agent
+  labels:
+    app: anita-agent
+    version: testing
+    environment: testing
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: anita-agent
+  template:
+    metadata:
+      labels:
+        app: anita-agent
+        version: testing
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: anita-agent-testing
+      containers:
+      - name: anita-agent
+        image: ghcr.io/emil/anita-agent:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 8765
+          name: websocket
+          protocol: TCP
+        env:
+        - name: ENVIRONMENT
+          value: "testing"
+        - name: LOG_LEVEL
+          value: "debug"
+        - name: TESTING_MODE
+          value: "true"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        volumeMounts:
+        - name: test-data
+          mountPath: /app/data
+        - name: config
+          mountPath: /app/config
+      volumes:
+      - name: test-data
+        emptyDir: {}
+      - name: config
+        configMap:
+          name: anita-agent-testing-config
+      
+---
+# Service for testing deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: anita-agent
+  namespace: testing-anita-agent
+  labels:
+    app: anita-agent
+spec:
+  selector:
+    app: anita-agent
+  ports:
+  - port: 8080
+    targetPort: 8080
+    name: http
+    protocol: TCP
+  - port: 8765
+    targetPort: 8765
+    name: websocket
+    protocol: TCP
+  type: ClusterIP
+
+---
+# ConfigMap for testing configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: anita-agent-testing-config
+  namespace: testing-anita-agent
+data:
+  config.yaml: |
+    environment: testing
+    log_level: debug
+    features:
+      self_healing: true
+      ai_integration: true
+      gitops: true
+    testing:
+      mock_ai: true
+      mock_external_services: true
+      coverage_threshold: 80
+
+---
+# ServiceAccount for testing
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: anita-agent-testing
+  namespace: testing-anita-agent
+
+---
+# Role for testing namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: anita-agent-testing-role
+  namespace: testing-anita-agent
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "configmaps"]
+  verbs: ["get", "list", "watch", "create", "update", "patch"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch"]
+
+---
+# RoleBinding for testing
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: anita-agent-testing-binding
+  namespace: testing-anita-agent
+subjects:
+- kind: ServiceAccount
+  name: anita-agent-testing
+  namespace: testing-anita-agent
+roleRef:
+  kind: Role
+  name: anita-agent-testing-role
+  apiGroup: rbac.authorization.k8s.io

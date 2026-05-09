@@ -1,0 +1,47 @@
+# Flux CD GitRepository and Kustomization
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: anita-agent
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://github.com/emil/anita-agent
+  ref:
+    branch: main
+  secretRef:
+    name: flux-system
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: anita-agent-production
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./gitops/overlays/production
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: anita-agent
+  targetNamespace: anita-agent
+  validation: client
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: anita-agent-testing
+  namespace: flux-system
+spec:
+  interval: 5m
+  path: ./gitops/overlays/testing
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: anita-agent
+  targetNamespace: testing-anita-agent
+  validation: client
+  dependsOn:
+  - name: anita-agent-production
